@@ -18,8 +18,8 @@ stream_line(In, Line) :-
         fail
     ).
 
-load_depths(File, List) :-
-    findall(Word, file_line(File, Word), List).
+load_depths(Depths, File) :-
+    findall(Word, file_line(File, Word), Depths).
 
 %
 % problem 1 - business logic
@@ -60,8 +60,8 @@ slide(Result, [E1, E2, E3|List]) :-
     % do not forget appending to the list is inverted (recursivity is a b*tch)
     append([SumOfDepths], Result2, Result).
 
-% resolve the first part of day 1
+% resolve the second part of day 1
 resolve_p2(Result, File) :-
-    load_depths(File, List),
-    slide([Head|SlidedList], List),
+    load_depths(Depths, File),
+    slide([Head|SlidedList], Depths),
     counter(Result, SlidedList, Head), !.
