@@ -33,24 +33,24 @@ reverse(Result, [Head|Tail], Acc) :- reverse(Result, Tail, [Head|Acc]).
 directions(0, 0, []).
 
 % handle forward direction
-directions(Forward, Height, [["forward", Units]|Directions]) :-
-    directions(Forward1, Height, Directions),
+directions(Forward, Depth, [["forward", Units]|Directions]) :-
+    directions(Forward1, Depth, Directions),
     Forward is Forward1 + Units.
 
 % handle up direction
-directions(Forward, Height, [["up", Units]|Directions]) :-
-    directions(Forward, Height1, Directions),
-    Height is Height1 + Units.
+directions(Forward, Depth, [["up", Units]|Directions]) :-
+    directions(Forward, Depth1, Directions),
+    Depth is Depth1 + Units.
 
 % handle down direction
-directions(Forward, Height, [["down", Units]|Directions]) :-
-    directions(Forward, Height1, Directions),
-    Height is Height1 - Units.
+directions(Forward, Depth, [["down", Units]|Directions]) :-
+    directions(Forward, Depth1, Directions),
+    Depth is Depth1 - Units.
 
 resolve_p1(Result, File) :-
     load_directions(Directions, File),
-    directions(Forward, Height, Directions),
-    Result is abs(Forward * Height), !.
+    directions(Forward, Depth, Directions),
+    Result is abs(Forward * Depth), !.
 
 %
 % problem 2 - business logic
@@ -60,24 +60,24 @@ resolve_p1(Result, File) :-
 directions(0, 0, 0, []).
 
 % handle forward direction
-directions(Aim, Forward, Height, [["forward", Units]|Directions]) :-
-    directions(Aim, Forward1, Height1, Directions),
+directions(Aim, Forward, Depth, [["forward", Units]|Directions]) :-
+    directions(Aim, Forward1, Depth1, Directions),
     Forward is Forward1 + Units,
-    Height is Height1 + (Units * Aim).
+    Depth is Depth1 + (Units * Aim).
 
 % handle up direction
-directions(Aim, Forward, Height, [["up", Units]|Directions]) :-
-    directions(Aim1, Forward, Height, Directions),
+directions(Aim, Forward, Depth, [["up", Units]|Directions]) :-
+    directions(Aim1, Forward, Depth, Directions),
     Aim is Aim1 + Units.
 
 % handle down direction
-directions(Aim, Forward, Height, [["down", Units]|Directions]) :-
-    directions(Aim1, Forward, Height, Directions),
+directions(Aim, Forward, Depth, [["down", Units]|Directions]) :-
+    directions(Aim1, Forward, Depth, Directions),
     Aim is Aim1 - Units.
 
 resolve_p2(Result, File) :-
     load_directions(Directions, File),
     % we need to reverse the list because the way recursivity work made us do the operations backwards
-    reverse(InvertedDirections, Directions, []),
-    directions(_, Forward, Height, InvertedDirections),
-    Result is abs(Forward * Height), !.
+    reverse(ReversedDirections, Directions, []),
+    directions(_, Forward, Depth, ReversedDirections),
+    Result is abs(Forward * Depth), !.
