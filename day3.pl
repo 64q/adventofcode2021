@@ -113,7 +113,6 @@ resolve_p2(Result, File) :-
     transpose(Data, Transposed),
     gamma(Gamma, Transposed),
     filter_o2(O2Value, Data, Gamma, 0),
-    writeln(O2Value),
     b_to_d(O2, O2Value),
     epsilon(Epsilon, Gamma),
     filter_co2(CO2Value, Data, Epsilon, 0),
