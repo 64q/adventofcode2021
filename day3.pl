@@ -34,36 +34,30 @@ b_to_d(Result, [Head|Tail]) :-
 % problem 1 - business logic
 %
 
-gamma_col(Value, Column) :-
-    sum_list(Column, Sum),
-    length(Column, Length),
-    Sum >= Length / 2,
-    Value is 1.
-
-gamma_col(Value, Column) :-
-    sum_list(Column, Sum),
-    length(Column, Length),
-    Sum < Length / 2,
-    Value is 0.
-
 % end of gamma computing
 gamma([], []).
 
 gamma([Value|Gamma], [Column|Transposed]) :-
     gamma(Gamma, Transposed),
-    gamma_col(Value, Column).
+    sum_list(Column, Sum),
+    length(Column, Length),
+    Sum >= Length / 2,
+    Value is 1.
 
+gamma([Value|Gamma], [Column|Transposed]) :-
+    gamma(Gamma, Transposed),
+    sum_list(Column, Sum),
+    length(Column, Length),
+    Sum < Length / 2,
+    Value is 0.
+
+% end of epsilon computing
 epsilon([], []).
 
 epsilon([Flipped|Epsilon], [Value|Gamma]) :-
     epsilon(Epsilon, Gamma),
-    Value = 1,
-    Flipped is 0.
-
-epsilon([Flipped|Epsilon], [Value|Gamma]) :-
-    epsilon(Epsilon, Gamma),
-    Value = 0,
-    Flipped is 1.
+    % pour flip le bit, on le décale simplement 1 vers la droite selon la valeur du bit Gamma
+    Flipped is 1 >> Value.
 
 resolve_p1(Result, File) :-
     load_data(Data, File),
@@ -112,9 +106,9 @@ resolve_p2(Result, File) :-
     load_data(Data, File),
     transpose(Data, Transposed),
     gamma(Gamma, Transposed),
-    filter_o2(O2Value, Data, Gamma, 0),
-    b_to_d(O2, O2Value),
+    filter_o2(O2BinaryValue, Data, Gamma, 0),
     epsilon(Epsilon, Gamma),
-    filter_co2(CO2Value, Data, Epsilon, 0),
-    b_to_d(CO2, CO2Value),
+    filter_co2(CO2BinaryValue, Data, Epsilon, 0),
+    b_to_d(O2, O2BinaryValue),
+    b_to_d(CO2, CO2BinaryValue),
     Result is O2 * CO2, !.
